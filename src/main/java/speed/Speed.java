@@ -1,5 +1,6 @@
 package speed;
 
+import speed.task.Deadline;
 import speed.task.Task;
 import speed.task.Todo;
 
@@ -24,13 +25,14 @@ public class Speed {
         }
     }
 
-    public static void printTodoTask(Task task, int totalTaskCount) {
+    public static void printAddedTask(Task task, int totalTaskCount) {
         printLine();
-        System.out.println("Gotchu, I've added this task:");
+        System.out.println("Gotcha, I've added this task:");
         System.out.println(task.toDisplayString());
         System.out.println("Now you have " + totalTaskCount +" tasks in the list.");
         printLine();
     }
+
 
     public static void printMarkedTask(Task[] tasks, int markTaskIndex, int totalTaskCount) {
         if (markTaskIndex + 1 > totalTaskCount ) {
@@ -104,7 +106,24 @@ public class Speed {
                 String[] parts = input.split(" ");
                 String description = parts[1];
                 tasks[totalTasksCount++] = new Todo(description);
-                printTodoTask(tasks[totalTasksCount - 1], totalTasksCount);
+                printAddedTask(tasks[totalTasksCount - 1], totalTasksCount);
+            } else if(input.startsWith("deadline")) {
+              //remove deadline from input
+                String deadlineContent = input.substring("deadline".length()).trim();
+                String[] parts = deadlineContent.split(" /by",2); //split at most by 2 parts
+
+                //check format
+                if(parts.length < 2) {
+                    System.out.println("Format: deadline <description> /by <when>");
+                    return;
+                }
+
+                String description = parts[0].trim();
+                String deadline = parts[1].trim();
+
+                tasks[totalTasksCount++] = new Deadline(description,deadline);
+                printAddedTask(tasks[totalTasksCount - 1], totalTasksCount);
+
             } else {
                 tasks[totalTasksCount++] = new Task(input);
                 printLine();

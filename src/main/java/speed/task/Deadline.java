@@ -7,4 +7,9 @@ public class Deadline extends Task {
         super(description);
         this.deadlineTime = deadlineTime;
     }
+
+    @Override
+    public String toDisplayString() {
+        return "[D] " + super.toDisplayString() + " (by: " + deadlineTime + ")";
+    }
 }
