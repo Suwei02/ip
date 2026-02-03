@@ -1,6 +1,7 @@
 package speed;
 
 import speed.task.Deadline;
+import speed.task.Event;
 import speed.task.Task;
 import speed.task.Todo;
 
@@ -102,18 +103,18 @@ public class Speed {
 
                 printUnmarkedTask(tasks, unmarkTaskIndex, totalTasksCount);
 
-            } else if(input.startsWith("todo")) {
+            } else if (input.startsWith("todo")) {
                 String[] parts = input.split(" ");
                 String description = parts[1];
                 tasks[totalTasksCount++] = new Todo(description);
                 printAddedTask(tasks[totalTasksCount - 1], totalTasksCount);
-            } else if(input.startsWith("deadline")) {
+            } else if (input.startsWith("deadline")) {
               //remove deadline from input
                 String deadlineContent = input.substring("deadline".length()).trim();
                 String[] parts = deadlineContent.split(" /by",2); //split at most by 2 parts
 
                 //check format
-                if(parts.length < 2) {
+                if (parts.length < 2) {
                     System.out.println("Format: deadline <description> /by <when>");
                     return;
                 }
@@ -122,6 +123,23 @@ public class Speed {
                 String deadline = parts[1].trim();
 
                 tasks[totalTasksCount++] = new Deadline(description,deadline);
+                printAddedTask(tasks[totalTasksCount - 1], totalTasksCount);
+
+            } else if (input.startsWith("event")){
+                String eventContent = input.substring("event".length()).trim();
+                String[] parts = eventContent.split(" /from | /to ", 3);
+
+                // Check format
+                if (parts.length < 3) {
+                    System.out.println("Format: event <description> /from <start time> /to <end time>");
+                    return;
+                }
+
+                String description = parts[0].trim();
+                String startTime = parts[1].trim();
+                String endTime = parts[2].trim();
+
+                tasks[totalTasksCount++] = new Event(description, startTime, endTime);
                 printAddedTask(tasks[totalTasksCount - 1], totalTasksCount);
 
             } else {
