@@ -1,12 +1,21 @@
 package speed.task;
 
-
+/**
+ * Represents a generic task with a description and completion status.
+ */
 public class Task {
 
+    /** Description of the task. */
     protected String description;
 
+    /** Completion status of the task. */
     protected boolean isDone;
 
+    /**
+     * Creates a task with the specified description.
+     *
+     * @param description Description of the task.
+     */
     public Task(String description) {
         this.description = description;
         this.isDone = false;
@@ -19,7 +28,9 @@ public class Task {
     public String getDescription() {
         return description;
     }
-
+    /**
+     * Marks this task as completed.
+     */
     public void markAsDone(){
         this.isDone = true;
     }

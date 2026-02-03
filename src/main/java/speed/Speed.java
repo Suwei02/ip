@@ -7,6 +7,10 @@ import speed.task.Todo;
 
 import java.util.Scanner;
 
+/**
+ * Main class for the Speed application.
+ */
+
 public class Speed {
 
     private static final int MAX_TASKS = 100;
@@ -15,14 +19,18 @@ public class Speed {
         System.out.println("____________________________________________________________");
     }
 
-    public static void printList(Task[] tasks, int taskNumber) {
-        if (taskNumber == 0) {
+    public static void printList(Task[] tasks, int taskCount) {
+        if (taskCount == 0) {
+            printLine();
             System.out.println("NO TASKS YET! SIUUU!");
+            printLine();
         } else {
+            printLine();
             System.out.println("Here are the tasks in your list bro:  ");
-            for (int i = 0; i < taskNumber; i++) {
+            for (int i = 0; i < taskCount; i++) {
                 System.out.println((i + 1) + "." + tasks[i].toDisplayString());
             }
+            printLine();
         }
     }
 
@@ -58,57 +66,44 @@ public class Speed {
             tasks[unmarkTaskIndex].markAsNotDone();
             printLine();
             System.out.println("Ok, still waiting on this one bro:");
-            System.out.println("[ ] " + tasks[unmarkTaskIndex].getDescription());
+            //System.out.println("[ ] " + tasks[unmarkTaskIndex].getDescription());
+            System.out.println(tasks[unmarkTaskIndex].toDisplayString());
+
             printLine();
         }
     }
 
     public static void main(String[] args) {
-        String logo =
-                        "███████╗██████╗ ███████╗███████╗██████╗ \n" +
-                        "██╔════╝██╔══██╗██╔════╝██╔════╝██╔══██╗\n" +
-                        "███████╗██████╔╝█████╗  █████╗  ██║  ██║\n" +
-                        "╚════██║██╔═══╝ ██╔══╝  ██╔══╝  ██║  ██║\n" +
-                        "███████║██║     ███████╗███████╗██████╔╝\n" +
-                        "╚══════╝╚═╝     ╚══════╝╚══════╝╚═════╝ \n";
-        printLine();
-        System.out.println("YO! I'M SPEED 🏃💨");
-        System.out.println(logo);
-        System.out.println("WHAT CAN I DO FOR YOU BROOOO?? 💥💥💥");
-        printLine();
+        greet();
 
         Scanner scanner = new Scanner(System.in);
         Task[] tasks = new Task[MAX_TASKS];
         int totalTasksCount = 0;
 
         while (true) {
-            String input = scanner.nextLine();
+            String input = scanner.nextLine().trim();
             if (input.equals("bye")) {
-                printLine();
-                System.out.println("PEACE OUT BROTHER!🫡 GREEN APPLE!!!🍏🍏");
-                printLine();
+                bye();
                 break;
             } else if (input.equals("list")) {
-                printLine();
                 printList(tasks, totalTasksCount);
-                printLine();
-            } else if (input.startsWith("mark")) {
+            } else if (input.startsWith("mark ")) {
                 String[] parts = input.split(" ");
                 int markTaskIndex = Integer.parseInt(parts[1]) - 1;
 
                 printMarkedTask(tasks, markTaskIndex, totalTasksCount);
-            } else if (input.startsWith("unmark")) {
+            } else if (input.startsWith("unmark ")) {
                 String[] parts = input.split(" ");
                 int unmarkTaskIndex = Integer.parseInt(parts[1]) - 1;
 
                 printUnmarkedTask(tasks, unmarkTaskIndex, totalTasksCount);
 
-            } else if (input.startsWith("todo")) {
-                String[] parts = input.split(" ");
-                String description = parts[1];
+            } else if (input.startsWith("todo ")) {
+                String[] parts = input.split(" ", 2);
+                String description = parts.length > 1 ? parts[1].trim() : ""; //checks for description
                 tasks[totalTasksCount++] = new Todo(description);
                 printAddedTask(tasks[totalTasksCount - 1], totalTasksCount);
-            } else if (input.startsWith("deadline")) {
+            } else if (input.startsWith("deadline ")) {
               //remove deadline from input
                 String deadlineContent = input.substring("deadline".length()).trim();
                 String[] parts = deadlineContent.split(" /by",2); //split at most by 2 parts
@@ -116,7 +111,7 @@ public class Speed {
                 //check format
                 if (parts.length < 2) {
                     System.out.println("Format: deadline <description> /by <when>");
-                    return;
+                    continue;
                 }
 
                 String description = parts[0].trim();
@@ -125,7 +120,7 @@ public class Speed {
                 tasks[totalTasksCount++] = new Deadline(description,deadline);
                 printAddedTask(tasks[totalTasksCount - 1], totalTasksCount);
 
-            } else if (input.startsWith("event")){
+            } else if (input.startsWith("event ")){
                 String eventContent = input.substring("event".length()).trim();
                 String[] parts = eventContent.split(" /from | /to ", 3);
 
@@ -151,4 +146,27 @@ public class Speed {
 
         }
     }
+
+    private static void bye() {
+        printLine();
+        System.out.println("PEACE OUT BROTHER!🫡 GREEN APPLE!!!🍏🍏");
+        printLine();
+    }
+
+    public static void greet() {
+        String logo =
+                        "███████╗██████╗ ███████╗███████╗██████╗ \n" +
+                        "██╔════╝██╔══██╗██╔════╝██╔════╝██╔══██╗\n" +
+                        "███████╗██████╔╝█████╗  █████╗  ██║  ██║\n" +
+                        "╚════██║██╔═══╝ ██╔══╝  ██╔══╝  ██║  ██║\n" +
+                        "███████║██║     ███████╗███████╗██████╔╝\n" +
+                        "╚══════╝╚═╝     ╚══════╝╚══════╝╚═════╝ \n";
+        printLine();
+        System.out.println("YO! I'M SPEED 🏃💨");
+        System.out.println(logo);
+        System.out.println("WHAT CAN I DO FOR YOU BROOOO?? 💥💥💥");
+        printLine();
+    }
 }
+
+
