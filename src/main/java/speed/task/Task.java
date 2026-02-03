@@ -1,7 +1,10 @@
-package speed;
+package speed.task;
+
 
 public class Task {
+
     protected String description;
+
     protected boolean isDone;
 
     public Task(String description) {
@@ -9,8 +12,8 @@ public class Task {
         this.isDone = false;
     }
 
-    public String getStatusIcon() {
-        return (isDone ? "X" : " "); // mark done task with X
+    public String toDisplayString() {
+        return "[" + (isDone ? "X" : " ") + "] " + description; // mark done task with X
     }
 
     public String getDescription() {

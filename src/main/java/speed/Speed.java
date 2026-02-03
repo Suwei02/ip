@@ -1,5 +1,8 @@
 package speed;
 
+import speed.task.Task;
+import speed.task.Todo;
+
 import java.util.Scanner;
 
 public class Speed {
@@ -16,10 +19,17 @@ public class Speed {
         } else {
             System.out.println("Here are the tasks in your list bro:  ");
             for (int i = 0; i < taskNumber; i++) {
-                System.out.println((i + 1) + ". [" + tasks[i].getStatusIcon()
-                        + "] " + tasks[i].getDescription());
+                System.out.println((i + 1) + "." + tasks[i].toDisplayString());
             }
         }
+    }
+
+    public static void printTodoTask(Task task, int totalTaskCount) {
+        printLine();
+        System.out.println("Gotchu, I've added this task:");
+        System.out.println(task.toDisplayString());
+        System.out.println("Now you have " + totalTaskCount +" tasks in the list.");
+        printLine();
     }
 
     public static void printMarkedTask(Task[] tasks, int markTaskIndex, int totalTaskCount) {
@@ -31,7 +41,7 @@ public class Speed {
             tasks[markTaskIndex].markAsDone();
             printLine();
             System.out.println("HELL YEAH! ANOTHER TASK DONE:");
-            System.out.println("[X] " + tasks[markTaskIndex].getDescription());
+            System.out.println(tasks[markTaskIndex].toDisplayString());
             printLine();
         }
     }
@@ -90,6 +100,11 @@ public class Speed {
 
                 printUnmarkedTask(tasks, unmarkTaskIndex, totalTasksCount);
 
+            } else if(input.startsWith("todo")) {
+                String[] parts = input.split(" ");
+                String description = parts[1];
+                tasks[totalTasksCount++] = new Todo(description);
+                printTodoTask(tasks[totalTasksCount - 1], totalTasksCount);
             } else {
                 tasks[totalTasksCount++] = new Task(input);
                 printLine();
