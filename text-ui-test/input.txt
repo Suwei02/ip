@@ -1,0 +1,10 @@
+list
+todo work
+deadline final project /by Friday night
+list
+mark 2
+unmark 2
+mark 3
+event career fair /from 8/10/2026 1200 /to 9/10/2026 1800
+list
+bye

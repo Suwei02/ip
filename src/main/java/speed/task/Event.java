@@ -4,8 +4,8 @@ package speed.task;
  * Represents a task that occurs during a specific time period.
  */
 public class Event extends Task {
-    protected String startTime;
-    protected String endTime;
+    private final String startTime;
+    private final String endTime;
 
     public Event(String description, String startTime, String endTime) {
         super(description);

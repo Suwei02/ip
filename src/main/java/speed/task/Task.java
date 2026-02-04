@@ -6,10 +6,10 @@ package speed.task;
 public class Task {
 
     /** Description of the task. */
-    protected String description;
+    private String description;
 
     /** Completion status of the task. */
-    protected boolean isDone;
+    private boolean isDone;
 
     /**
      * Creates a task with the specified description.
