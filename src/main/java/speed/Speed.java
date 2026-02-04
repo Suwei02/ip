@@ -19,6 +19,11 @@ public class Speed {
         System.out.println("____________________________________________________________");
     }
 
+    private static final String EVENT_FORMAT_ERROR =
+            "Format: event <description> /from <start time> /to <end time>";
+    private static final String DEADLINE_FORMAT_ERROR =
+            "Format: deadline <description> /by <when>";
+
     public static void printList(Task[] tasks, int taskCount) {
         if (taskCount == 0) {
             printLine();
@@ -38,13 +43,12 @@ public class Speed {
         printLine();
         System.out.println("Gotcha, I've added this task:");
         System.out.println(task.toDisplayString());
-        System.out.println("Now you have " + totalTaskCount +" tasks in the list.");
+        System.out.println("Now you have " + totalTaskCount + " tasks in the list.");
         printLine();
     }
 
-
     public static void printMarkedTask(Task[] tasks, int markTaskIndex, int totalTaskCount) {
-        if (markTaskIndex + 1 > totalTaskCount ) {
+        if (!isValidTaskIndex(markTaskIndex, totalTaskCount) ) {
             printLine();
             System.out.println("Invalid task number man.");
             printLine();
@@ -58,7 +62,7 @@ public class Speed {
     }
 
     public static void printUnmarkedTask(Task[] tasks, int unmarkTaskIndex, int totalTaskCount) {
-        if (unmarkTaskIndex + 1 > totalTaskCount ) {
+        if (!isValidTaskIndex(unmarkTaskIndex, totalTaskCount)) {
             printLine();
             System.out.println("Invalid task number man.");
             printLine();
@@ -73,6 +77,22 @@ public class Speed {
         }
     }
 
+    private static void printEventFormatError() {
+        printLine();
+        System.out.println(EVENT_FORMAT_ERROR);
+        printLine();
+    }
+    private static void printDeadlineFormatError() {
+        printLine();
+        System.out.println(DEADLINE_FORMAT_ERROR);
+        printLine();
+    }
+
+    // Helper to check validity of index
+    private static boolean isValidTaskIndex(int idx, int total) {
+        return idx >= 0 && idx < total;
+    }
+
     public static void main(String[] args) {
         greet();
 
@@ -85,13 +105,16 @@ public class Speed {
             if (input.equals("bye")) {
                 bye();
                 break;
+
             } else if (input.equals("list")) {
                 printList(tasks, totalTasksCount);
+
             } else if (input.startsWith("mark ")) {
                 String[] parts = input.split(" ");
                 int markTaskIndex = Integer.parseInt(parts[1]) - 1;
 
                 printMarkedTask(tasks, markTaskIndex, totalTasksCount);
+
             } else if (input.startsWith("unmark ")) {
                 String[] parts = input.split(" ");
                 int unmarkTaskIndex = Integer.parseInt(parts[1]) - 1;
@@ -103,6 +126,7 @@ public class Speed {
                 String description = parts.length > 1 ? parts[1].trim() : ""; //checks for description
                 tasks[totalTasksCount++] = new Todo(description);
                 printAddedTask(tasks[totalTasksCount - 1], totalTasksCount);
+
             } else if (input.startsWith("deadline ")) {
               //remove deadline from input
                 String deadlineContent = input.substring("deadline".length()).trim();
@@ -110,7 +134,7 @@ public class Speed {
 
                 //check format
                 if (parts.length < 2) {
-                    System.out.println("Format: deadline <description> /by <when>");
+                    printDeadlineFormatError();
                     continue;
                 }
 
@@ -126,8 +150,8 @@ public class Speed {
 
                 // Check format
                 if (parts.length < 3) {
-                    System.out.println("Format: event <description> /from <start time> /to <end time>");
-                    return;
+                    printEventFormatError();
+                    continue;
                 }
 
                 String description = parts[0].trim();
@@ -143,7 +167,6 @@ public class Speed {
                 System.out.println("added: " + input);
                 printLine();
             }
-
         }
     }
 
