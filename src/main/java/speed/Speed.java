@@ -145,15 +145,13 @@ public class Speed {
                 tasks[totalTasksCount++] = new Event(description, startTime, endTime);
                 printAddedTask(tasks[totalTasksCount - 1], totalTasksCount);
 
+            } else if (input.startsWith("help")) {
+                Ui.printCommandList();
             } else {
                 Ui.printErrorMsg();
             }
         }
     }
-
-
-
-
 }
 
 
