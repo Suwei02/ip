@@ -162,9 +162,9 @@ public class Speed {
                 printAddedTask(tasks[totalTasksCount - 1], totalTasksCount);
 
             } else {
-                tasks[totalTasksCount++] = new Task(input);
+                //tasks[totalTasksCount++] = new Task(input);
                 printLine();
-                System.out.println("added: " + input);
+                System.out.println("invalid command.");
                 printLine();
             }
         }

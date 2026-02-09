@@ -3,7 +3,7 @@ package speed.task;
 /**
  * Represents a generic task with a description and completion status.
  */
-public class Task {
+public abstract class Task {
 
     /** Description of the task. */
     private String description;
