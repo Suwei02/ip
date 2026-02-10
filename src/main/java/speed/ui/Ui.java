@@ -20,13 +20,18 @@ public class Ui {
     public static final String ERROR_NOT_NUMBER =
             "That's not a task number bro. -_-";
 
+    public static final String EVENT_FORMAT =
+            "Format: event <description> /from <start time> /to <end time>";
+
     public static final String EVENT_FORMAT_ERROR =
-            "Follow this format bro!\n" +
-                    "Format: event <description> /from <start time> /to <end time>";
+            "Follow this format bro!\n" + EVENT_FORMAT;
+
+
+    public static final String DEADLINE_FORMAT =
+            "Format: deadline <description> /by <when>";
 
     public static final String DEADLINE_FORMAT_ERROR =
-            "Follow this format bro!\n" +
-                    "Format: deadline <description> /by <when>";
+            "Follow this format bro!\n" + DEADLINE_FORMAT;
 
     public static final String INVALID_TASK_NUMBER =
             "Invalid task number man. Type <list> to find the correct task number!";
@@ -70,8 +75,8 @@ public class Ui {
         System.out.println("Available commands:");
         System.out.println("1.list");
         System.out.println("2.todo <description>");
-        System.out.println("3.deadline " + DEADLINE_FORMAT_ERROR);
-        System.out.println("4.event " + EVENT_FORMAT_ERROR);
+        System.out.println("3.deadline " + DEADLINE_FORMAT);
+        System.out.println("4.event " + EVENT_FORMAT);
         System.out.println("5.mark <Task number>");
         System.out.println("6.unmark <Task number>");
         System.out.println("7.bye");
