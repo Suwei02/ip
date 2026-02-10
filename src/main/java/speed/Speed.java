@@ -4,6 +4,7 @@ import speed.task.Deadline;
 import speed.task.Event;
 import speed.task.Task;
 import speed.task.Todo;
+import speed.exception.SpeedException;
 
 import java.util.Scanner;
 
@@ -41,7 +42,7 @@ public class Speed {
     }
 
     public static void printMarkedTask(Task[] tasks, int markTaskIndex, int totalTaskCount) {
-        if (!isValidTaskIndex(markTaskIndex, totalTaskCount) ) {
+        if (!isValidTaskIndex(markTaskIndex, totalTaskCount)) {
             Ui.printLine();
             System.out.println("Invalid task number man.");
             Ui.printLine();
@@ -71,7 +72,6 @@ public class Speed {
     }
 
 
-
     // Helper to check validity of index
     private static boolean isValidTaskIndex(int idx, int total) {
         return idx >= 0 && idx < total;
@@ -86,72 +86,73 @@ public class Speed {
 
         while (true) {
             String input = scanner.nextLine().trim();
-            if (input.equals("bye")) {
-                Ui.bye();
-                break;
+            try {
+                if (input.equals("bye")) {
+                    Ui.bye();
+                    break;
 
-            } else if (input.equals("list")) {
-                printList(tasks, totalTasksCount);
+                } else if (input.equals("list")) {
+                    printList(tasks, totalTasksCount);
 
-            } else if (input.startsWith("mark ")) {
-                String[] parts = input.split(" ");
-                int markTaskIndex = Integer.parseInt(parts[1]) - 1;
+                } else if (input.startsWith("mark ")) {
+                    String[] parts = input.split(" ");
+                    int markTaskIndex = Integer.parseInt(parts[1]) - 1;
 
-                printMarkedTask(tasks, markTaskIndex, totalTasksCount);
+                    printMarkedTask(tasks, markTaskIndex, totalTasksCount);
 
-            } else if (input.startsWith("unmark ")) {
-                String[] parts = input.split(" ");
-                int unmarkTaskIndex = Integer.parseInt(parts[1]) - 1;
+                } else if (input.startsWith("unmark ")) {
+                    String[] parts = input.split(" ");
+                    int unmarkTaskIndex = Integer.parseInt(parts[1]) - 1;
 
-                printUnmarkedTask(tasks, unmarkTaskIndex, totalTasksCount);
+                    printUnmarkedTask(tasks, unmarkTaskIndex, totalTasksCount);
 
-            } else if (input.startsWith("todo ")) {
-                String[] parts = input.split(" ", 2);
-                String description = parts.length > 1 ? parts[1].trim() : ""; //checks for description
-                tasks[totalTasksCount++] = new Todo(description);
-                printAddedTask(tasks[totalTasksCount - 1], totalTasksCount);
+                } else if (input.startsWith("todo ")) {
+                    String[] parts = input.split(" ", 2);
+                    String description = parts.length > 1 ? parts[1].trim() : ""; //checks for description
+                    tasks[totalTasksCount++] = new Todo(description);
+                    printAddedTask(tasks[totalTasksCount - 1], totalTasksCount);
 
-            } else if (input.startsWith("deadline ")) {
-              //remove deadline from input
-                String deadlineContent = input.substring("deadline".length()).trim();
-                String[] parts = deadlineContent.split(" /by",2); //split at most by 2 parts
+                } else if (input.startsWith("deadline ")) {
+                    //remove deadline from input
+                    String deadlineContent = input.substring("deadline".length()).trim();
+                    String[] parts = deadlineContent.split(" /by", 2); //split at most by 2 parts
 
-                //check format
-                if (parts.length < 2) {
-                    Ui.printDeadlineFormatError();
-                    continue;
+                    //check format
+                    if (parts.length < 2) {
+                        throw new SpeedException(Ui.DEADLINE_FORMAT_ERROR);
+                    }
+
+                    String description = parts[0].trim();
+                    String deadline = parts[1].trim();
+
+                    tasks[totalTasksCount++] = new Deadline(description, deadline);
+                    printAddedTask(tasks[totalTasksCount - 1], totalTasksCount);
+
+                } else if (input.startsWith("event ")) {
+                    String eventContent = input.substring("event".length()).trim();
+                    String[] parts = eventContent.split(" /from | /to ", 3);
+
+                    // Check format
+                    if (parts.length < 3) {
+                        throw new SpeedException(Ui.EVENT_FORMAT_ERROR);
+                    }
+
+                    String description = parts[0].trim();
+                    String startTime = parts[1].trim();
+                    String endTime = parts[2].trim();
+
+                    tasks[totalTasksCount++] = new Event(description, startTime, endTime);
+                    printAddedTask(tasks[totalTasksCount - 1], totalTasksCount);
+
+                } else if (input.startsWith("help")) {
+                    Ui.printCommandList();
+                } else {
+                    throw new SpeedException(Ui.ERROR_UNKNOWN_COMMAND);
                 }
-
-                String description = parts[0].trim();
-                String deadline = parts[1].trim();
-
-                tasks[totalTasksCount++] = new Deadline(description,deadline);
-                printAddedTask(tasks[totalTasksCount - 1], totalTasksCount);
-
-            } else if (input.startsWith("event ")){
-                String eventContent = input.substring("event".length()).trim();
-                String[] parts = eventContent.split(" /from | /to ", 3);
-
-                // Check format
-                if (parts.length < 3) {
-                    Ui.printEventFormatError();
-                    continue;
-                }
-
-                String description = parts[0].trim();
-                String startTime = parts[1].trim();
-                String endTime = parts[2].trim();
-
-                tasks[totalTasksCount++] = new Event(description, startTime, endTime);
-                printAddedTask(tasks[totalTasksCount - 1], totalTasksCount);
-
-            } else if (input.startsWith("help")) {
-                Ui.printCommandList();
-            } else {
-                Ui.printErrorMsg();
+            } catch (SpeedException e) {
+                Ui.showError(e.getMessage());
             }
         }
     }
 }
-
 

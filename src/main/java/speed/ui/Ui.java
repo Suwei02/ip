@@ -8,9 +8,22 @@ package speed.ui;
 
 public class Ui {
 
-    private static final String EVENT_FORMAT_ERROR =
+    public static final String ERROR_UNKNOWN_COMMAND =
+            "Invalid command.\nType <help> to see available commands.";
+
+    public static final String ERROR_EMPTY_TODO =
+            "The description of a todo cannot be empty.";
+
+    public static final String ERROR_MARK_NO_NUMBER =
+            "Please provide a task number. Usage: mark <number>";
+
+    public static final String ERROR_MARK_NOT_NUMBER =
+            "Task number must be an integer.";
+
+    public static final String EVENT_FORMAT_ERROR =
             "Format: event <description> /from <start time> /to <end time>";
-    private static final String DEADLINE_FORMAT_ERROR =
+
+    public static final String DEADLINE_FORMAT_ERROR =
             "Format: deadline <description> /by <when>";
 
 
@@ -41,20 +54,9 @@ public class Ui {
         printLine();
     }
 
-    public static void printEventFormatError() {
+    public static void showError(String message) {
         printLine();
-        System.out.println(EVENT_FORMAT_ERROR);
-        printLine();
-    }
-    public static void printDeadlineFormatError() {
-        printLine();
-        System.out.println(DEADLINE_FORMAT_ERROR);
-        printLine();
-    }
-
-    public static void printErrorMsg() {
-        printLine();
-        System.out.println("Invalid command.\nType <help> to see the list of commands. ");
+        System.out.println(message);
         printLine();
     }
 
