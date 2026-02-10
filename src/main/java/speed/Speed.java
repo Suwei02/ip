@@ -42,17 +42,12 @@ public class Speed {
     }
 
     public static void printMarkedTask(Task[] tasks, int markTaskIndex, int totalTaskCount) {
-        if (!isValidTaskIndex(markTaskIndex, totalTaskCount)) {
-            Ui.printLine();
-            System.out.println("Invalid task number man.");
-            Ui.printLine();
-        } else {
             tasks[markTaskIndex].markAsDone();
             Ui.printLine();
             System.out.println("HELL YEAH! ANOTHER TASK DONE:");
             System.out.println(tasks[markTaskIndex].toDisplayString());
             Ui.printLine();
-        }
+
     }
 
     public static void printUnmarkedTask(Task[] tasks, int unmarkTaskIndex, int totalTaskCount) {
@@ -72,11 +67,6 @@ public class Speed {
     }
 
 
-    // Helper to check validity of index
-    private static boolean isValidTaskIndex(int idx, int total) {
-        return idx >= 0 && idx < total;
-    }
-
     public static void main(String[] args) {
         Ui.greet();
 
@@ -94,25 +84,24 @@ public class Speed {
                 } else if (input.equals("list")) {
                     printList(tasks, totalTasksCount);
 
-                } else if (input.startsWith("mark ")) {
-                    String[] parts = input.split(" ");
-                    int markTaskIndex = Integer.parseInt(parts[1]) - 1;
-
+                } else if (input.startsWith("mark")) {
+                    int markTaskIndex = parseTaskIndex(input,totalTasksCount);
                     printMarkedTask(tasks, markTaskIndex, totalTasksCount);
 
-                } else if (input.startsWith("unmark ")) {
-                    String[] parts = input.split(" ");
-                    int unmarkTaskIndex = Integer.parseInt(parts[1]) - 1;
-
+                } else if (input.startsWith("unmark")) {
+                    int unmarkTaskIndex = parseTaskIndex(input,totalTasksCount);
                     printUnmarkedTask(tasks, unmarkTaskIndex, totalTasksCount);
-
-                } else if (input.startsWith("todo ")) {
+                    //Ensures 'todoo read book' is not allowed, and throws an ERROR_EMPTY_TODO for empty description
+                } else if (input.equals("todo") || input.startsWith("todo ")) {
                     String[] parts = input.split(" ", 2);
-                    String description = parts.length > 1 ? parts[1].trim() : ""; //checks for description
+                    String description = parts.length < 2 ? "" : parts[1].trim();
+                    if (description.isEmpty()) {
+                        throw new SpeedException(Ui.ERROR_EMPTY_TODO);
+                    }
                     tasks[totalTasksCount++] = new Todo(description);
                     printAddedTask(tasks[totalTasksCount - 1], totalTasksCount);
 
-                } else if (input.startsWith("deadline ")) {
+                } else if (input.startsWith("deadline")) {
                     //remove deadline from input
                     String deadlineContent = input.substring("deadline".length()).trim();
                     String[] parts = deadlineContent.split(" /by", 2); //split at most by 2 parts
@@ -128,7 +117,7 @@ public class Speed {
                     tasks[totalTasksCount++] = new Deadline(description, deadline);
                     printAddedTask(tasks[totalTasksCount - 1], totalTasksCount);
 
-                } else if (input.startsWith("event ")) {
+                } else if (input.startsWith("event")) {
                     String eventContent = input.substring("event".length()).trim();
                     String[] parts = eventContent.split(" /from | /to ", 3);
 
@@ -153,6 +142,29 @@ public class Speed {
                 Ui.showError(e.getMessage());
             }
         }
+    }
+    // Helper
+    private static boolean isValidTaskIndex(int idx, int total) {
+        return idx >= 0 && idx < total;
+    }
+
+    //Helper to check validity of index
+    private static int parseTaskIndex (String input, int totalTaskCount) throws SpeedException {
+        String[] parts = input.trim().split("\\s+"); //splits string by one or more spaces
+        if (parts.length < 2) {
+            throw new SpeedException(Ui.ERROR_NO_TASK_NUMBER);
+        }
+        int index;
+        try {
+            index = Integer.parseInt(parts[1]) - 1;
+        } catch (NumberFormatException e) {
+            throw new SpeedException(Ui.ERROR_NOT_NUMBER);
+        }
+
+        if (!isValidTaskIndex(index, totalTaskCount)) {
+            throw new SpeedException(Ui.INVALID_TASK_NUMBER);
+        }
+        return index;
     }
 }
 

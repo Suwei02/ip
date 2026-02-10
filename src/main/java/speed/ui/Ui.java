@@ -12,19 +12,24 @@ public class Ui {
             "Invalid command.\nType <help> to see available commands.";
 
     public static final String ERROR_EMPTY_TODO =
-            "The description of a todo cannot be empty.";
+            "Hold up! You forgot to give a description of the todo!!";
 
-    public static final String ERROR_MARK_NO_NUMBER =
-            "Please provide a task number. Usage: mark <number>";
+    public static final String ERROR_NO_TASK_NUMBER =
+            "Please give me the task number as well bro.";
 
-    public static final String ERROR_MARK_NOT_NUMBER =
-            "Task number must be an integer.";
+    public static final String ERROR_NOT_NUMBER =
+            "That's not a task number bro. -_-";
 
     public static final String EVENT_FORMAT_ERROR =
-            "Format: event <description> /from <start time> /to <end time>";
+            "Follow this format bro!\n" +
+                    "Format: event <description> /from <start time> /to <end time>";
 
     public static final String DEADLINE_FORMAT_ERROR =
-            "Format: deadline <description> /by <when>";
+            "Follow this format bro!\n" +
+                    "Format: deadline <description> /by <when>";
+
+    public static final String INVALID_TASK_NUMBER =
+            "Invalid task number man. Type <list> to find the correct task number!";
 
 
     public static void printLine() {
