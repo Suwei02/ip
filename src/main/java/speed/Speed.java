@@ -84,11 +84,11 @@ public class Speed {
                 } else if (input.equals("list")) {
                     printList(tasks, totalTasksCount);
 
-                } else if (input.startsWith("mark")) {
+                } else if (input.equals("mark") || input.startsWith("mark ")) {
                     int markTaskIndex = parseTaskIndex(input,totalTasksCount);
                     printMarkedTask(tasks, markTaskIndex, totalTasksCount);
 
-                } else if (input.startsWith("unmark")) {
+                } else if (input.equals("unmark") || input.startsWith("unmark ")) {
                     int unmarkTaskIndex = parseTaskIndex(input,totalTasksCount);
                     printUnmarkedTask(tasks, unmarkTaskIndex, totalTasksCount);
                     //Ensures 'todoo read book' is not allowed, and throws an ERROR_EMPTY_TODO for empty description
@@ -101,7 +101,7 @@ public class Speed {
                     tasks[totalTasksCount++] = new Todo(description);
                     printAddedTask(tasks[totalTasksCount - 1], totalTasksCount);
 
-                } else if (input.startsWith("deadline")) {
+                } else if (input.equals("deadline") || input.startsWith("deadline ")) {
                     //remove deadline from input
                     String deadlineContent = input.substring("deadline".length()).trim();
                     String[] parts = deadlineContent.split(" /by", 2); //split at most by 2 parts
@@ -117,7 +117,7 @@ public class Speed {
                     tasks[totalTasksCount++] = new Deadline(description, deadline);
                     printAddedTask(tasks[totalTasksCount - 1], totalTasksCount);
 
-                } else if (input.startsWith("event")) {
+                } else if (input.equals("event") || input.startsWith("event ")) {
                     String eventContent = input.substring("event".length()).trim();
                     String[] parts = eventContent.split(" /from | /to ", 3);
 
@@ -133,7 +133,7 @@ public class Speed {
                     tasks[totalTasksCount++] = new Event(description, startTime, endTime);
                     printAddedTask(tasks[totalTasksCount - 1], totalTasksCount);
 
-                } else if (input.startsWith("help")) {
+                } else if (input.equals("help")) {
                     Ui.printCommandList();
                 } else {
                     throw new SpeedException(Ui.ERROR_UNKNOWN_COMMAND);
