@@ -27,7 +27,7 @@ public class Speed {
             Ui.printLine();
             System.out.println("Here are the tasks in your list bro:  ");
             for (int i = 0; i < taskCount; i++) {
-                System.out.println((i + 1) + "." + tasks[i].toDisplayString());
+                System.out.println((i + 1) + "." + tasks[i].displayString());
             }
             Ui.printLine();
         }
@@ -36,7 +36,7 @@ public class Speed {
     public static void printAddedTask(Task task, int totalTaskCount) {
         Ui.printLine();
         System.out.println("Gotcha, I've added this task:");
-        System.out.println(task.toDisplayString());
+        System.out.println(task.displayString());
         System.out.println("Now you have " + totalTaskCount + " tasks in the list.");
         Ui.printLine();
     }
@@ -45,9 +45,8 @@ public class Speed {
             tasks[markTaskIndex].markAsDone();
             Ui.printLine();
             System.out.println("HELL YEAH! ANOTHER TASK DONE:");
-            System.out.println(tasks[markTaskIndex].toDisplayString());
+            System.out.println(tasks[markTaskIndex].displayString());
             Ui.printLine();
-
     }
 
     public static void printUnmarkedTask(Task[] tasks, int unmarkTaskIndex, int totalTaskCount) {
@@ -59,9 +58,7 @@ public class Speed {
             tasks[unmarkTaskIndex].markAsNotDone();
             Ui.printLine();
             System.out.println("Ok, still waiting on this one bro:");
-            //System.out.println("[ ] " + tasks[unmarkTaskIndex].getDescription());
-            System.out.println(tasks[unmarkTaskIndex].toDisplayString());
-
+            System.out.println(tasks[unmarkTaskIndex].displayString());
             Ui.printLine();
         }
     }
@@ -78,7 +75,7 @@ public class Speed {
             String input = scanner.nextLine().trim();
             try {
                 if (input.equals("bye")) {
-                    Ui.bye();
+                    Ui.printByeMessage();
                     break;
 
                 } else if (input.equals("list")) {

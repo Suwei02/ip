@@ -21,7 +21,7 @@ public abstract class Task {
         this.isDone = false;
     }
 
-    public String toDisplayString() {
+    public String displayString() {
         return "[" + (isDone ? "X" : " ") + "] " + description; // mark done task with X
     }
 

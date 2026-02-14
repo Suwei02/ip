@@ -15,7 +15,7 @@ public class Todo extends Task {
     }
 
     @Override
-    public String toDisplayString() {
-        return "[T] " + super.toDisplayString();
+    public String displayString() {
+        return "[T] " + super.displayString();
     }
 }

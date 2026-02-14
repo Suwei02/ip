@@ -4,8 +4,6 @@ package speed.ui;
  *Contains methods displaying user interaction texts.
  */
 
-
-
 public class Ui {
 
     public static final String ERROR_UNKNOWN_COMMAND =
@@ -20,14 +18,13 @@ public class Ui {
     public static final String ERROR_NOT_NUMBER =
             "That's not a task number bro. -_-";
 
-    public static final String EVENT_FORMAT =
+    private static final String EVENT_FORMAT =
             "Format: event <description> /from <start time> /to <end time>";
 
     public static final String EVENT_FORMAT_ERROR =
             "Follow this format bro!\n" + EVENT_FORMAT;
 
-
-    public static final String DEADLINE_FORMAT =
+    private static final String DEADLINE_FORMAT =
             "Format: deadline <description> /by <when>";
 
     public static final String DEADLINE_FORMAT_ERROR =
@@ -36,11 +33,9 @@ public class Ui {
     public static final String INVALID_TASK_NUMBER =
             "Invalid task number man. Type <list> to find the correct task number!";
 
-
     public static void printLine() {
         System.out.println("____________________________________________________________");
     }
-
 
     public static void greet() {
         String logo =
@@ -58,9 +53,12 @@ public class Ui {
         printLine();
     }
 
-    public static void bye() {
+    private static final String BYE_MESSAGE =
+            "PEACE OUT BROTHER!🫡 GREEN APPLE!!!🍏🍏";
+
+    public static void printByeMessage() {
         printLine();
-        System.out.println("PEACE OUT BROTHER!🫡 GREEN APPLE!!!🍏🍏");
+        System.out.println(BYE_MESSAGE);
         printLine();
     }
 
@@ -70,7 +68,7 @@ public class Ui {
         printLine();
     }
 
-    public static void printCommandList () {
+    public static void printCommandList() {
         printLine();
         System.out.println("Available commands:");
         System.out.println("1.list");

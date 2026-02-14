@@ -12,7 +12,7 @@ public class Deadline extends Task {
     }
 
     @Override
-    public String toDisplayString() {
-        return "[D] " + super.toDisplayString() + " (by: " + deadlineTime + ")";
+    public String displayString() {
+        return "[D] " + super.displayString() + " (by: " + deadlineTime + ")";
     }
 }

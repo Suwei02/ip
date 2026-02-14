@@ -14,7 +14,7 @@ public class Event extends Task {
     }
 
     @Override
-    public String toDisplayString() {
-        return "[E] " + super.toDisplayString() + " (from: " + startTime + " to: " + endTime + ")";
+    public String displayString() {
+        return "[E] " + super.displayString() + " (from: " + startTime + " to: " + endTime + ")";
     }
 }
