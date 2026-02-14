@@ -37,7 +37,7 @@ Ok, still waiting on this one bro:
 [D] [ ] final project (by: Friday night)
 ____________________________________________________________
 ____________________________________________________________
-Invalid task number man.
+Invalid task number man. Type <list> to find the correct task number!
 ____________________________________________________________
 ____________________________________________________________
 Gotcha, I've added this task:
