@@ -83,7 +83,8 @@ public class Ui {
         System.out.println("4.event " + EVENT_FORMAT);
         System.out.println("5.mark <Task number>");
         System.out.println("6.unmark <Task number>");
-        System.out.println("7.bye");
+        System.out.println("7.delete <Task number>");
+        System.out.println("8.bye");
         printLine();
     }
 }

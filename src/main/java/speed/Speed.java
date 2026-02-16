@@ -16,7 +16,7 @@ import  speed.ui.Ui;
  */
 
 public class Speed {
-    
+
     public static void printList(ArrayList<Task> tasks) {
         if (tasks.isEmpty()) {
             Ui.noTasksMessage();
@@ -31,8 +31,6 @@ public class Speed {
             Ui.printLine();
         }
     }
-
-
 
     public static void printAddedTask(Task task, int totalTaskCount) {
         Ui.printLine();
@@ -58,6 +56,14 @@ public class Speed {
             Ui.printLine();
     }
 
+    public static void printDeletedTask(Task removedTask, int remainingTasksCount) {
+        Ui.printLine();
+        System.out.println("Gotchu bro! Deleting this task:");
+        System.out.println(removedTask.displayString());
+        System.out.println("Now you have " + remainingTasksCount + " tasks in the list.");
+        Ui.printLine();
+    }
+
     public static void main(String[] args) {
         Ui.greet();
         Scanner scanner = new Scanner(System.in);
@@ -81,7 +87,12 @@ public class Speed {
                     int unmarkTaskIndex = parseTaskIndex(input,tasks.size());
                     printUnmarkedTask(tasks, unmarkTaskIndex);
 
-                    //Ensures 'todoo read book' is not allowed, and throws an ERROR_EMPTY_TODO for empty description
+
+                } else if (input.equals("delete") ||  input.startsWith("delete ")) {
+                    int deleteTaskIndex = parseTaskIndex(input,tasks.size());
+                    Task removedTask = tasks.remove(deleteTaskIndex);
+                    printDeletedTask(removedTask, tasks.size());
+
                 } else if (input.equals("todo") || input.startsWith("todo ")) {
                     String[] parts = input.split(" ", 2);
                     String description = parts.length < 2 ? "" : parts[1].trim();
