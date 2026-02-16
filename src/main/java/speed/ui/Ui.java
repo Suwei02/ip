@@ -33,6 +33,12 @@ public class Ui {
     public static final String INVALID_TASK_NUMBER =
             "Invalid task number man. Type <list> to find the correct task number!";
 
+    public static void noTasksMessage() {
+        printLine();
+        System.out.println("NO TASKS YET! SIUUU!");
+        printLine();
+    }
+
     public static void printLine() {
         System.out.println("____________________________________________________________");
     }
