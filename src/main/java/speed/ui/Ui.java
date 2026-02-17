@@ -33,6 +33,12 @@ public class Ui {
     public static final String INVALID_TASK_NUMBER =
             "Invalid task number man. Type <list> to find the correct task number!";
 
+    public static void noTasksMessage() {
+        printLine();
+        System.out.println("NO TASKS YET! SIUUU!");
+        printLine();
+    }
+
     public static void printLine() {
         System.out.println("____________________________________________________________");
     }
@@ -77,7 +83,8 @@ public class Ui {
         System.out.println("4.event " + EVENT_FORMAT);
         System.out.println("5.mark <Task number>");
         System.out.println("6.unmark <Task number>");
-        System.out.println("7.bye");
+        System.out.println("7.delete <Task number>");
+        System.out.println("8.bye");
         printLine();
     }
 }

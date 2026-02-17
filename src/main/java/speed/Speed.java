@@ -6,6 +6,7 @@ import speed.task.Task;
 import speed.task.Todo;
 import speed.exception.SpeedException;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import  speed.ui.Ui;
@@ -16,18 +17,16 @@ import  speed.ui.Ui;
 
 public class Speed {
 
-    private static final int MAX_TASKS = 100;
-
-    public static void printList(Task[] tasks, int taskCount) {
-        if (taskCount == 0) {
-            Ui.printLine();
-            System.out.println("NO TASKS YET! SIUUU!");
-            Ui.printLine();
+    public static void printList(ArrayList<Task> tasks) {
+        if (tasks.isEmpty()) {
+            Ui.noTasksMessage();
         } else {
             Ui.printLine();
             System.out.println("Here are the tasks in your list bro:  ");
-            for (int i = 0; i < taskCount; i++) {
-                System.out.println((i + 1) + "." + tasks[i].displayString());
+            int taskCount = 1;
+            for (Task task : tasks) {
+
+                System.out.println((taskCount++) + "." + task.displayString());
             }
             Ui.printLine();
         }
@@ -41,27 +40,34 @@ public class Speed {
         Ui.printLine();
     }
 
-    public static void printMarkedTask(Task[] tasks, int markTaskIndex) {
-            tasks[markTaskIndex].markAsDone();
+    public static void printMarkedTask(ArrayList<Task> tasks, int markTaskIndex) {
+            tasks.get(markTaskIndex).markAsDone();
             Ui.printLine();
             System.out.println("HELL YEAH! ANOTHER TASK DONE:");
-            System.out.println(tasks[markTaskIndex].displayString());
+            System.out.println(tasks.get(markTaskIndex).displayString());
             Ui.printLine();
     }
 
-    public static void printUnmarkedTask(Task[] tasks, int unmarkTaskIndex) {
-            tasks[unmarkTaskIndex].markAsNotDone();
+    public static void printUnmarkedTask(ArrayList<Task>  tasks, int unmarkTaskIndex) {
+            tasks.get(unmarkTaskIndex).markAsNotDone();
             Ui.printLine();
             System.out.println("Ok, still waiting on this one bro:");
-            System.out.println(tasks[unmarkTaskIndex].displayString());
+            System.out.println(tasks.get(unmarkTaskIndex).displayString());
             Ui.printLine();
+    }
+
+    public static void printDeletedTask(Task removedTask, int remainingTasksCount) {
+        Ui.printLine();
+        System.out.println("Gotchu bro! Deleting this task:");
+        System.out.println(removedTask.displayString());
+        System.out.println("Now you have " + remainingTasksCount + " tasks in the list.");
+        Ui.printLine();
     }
 
     public static void main(String[] args) {
         Ui.greet();
         Scanner scanner = new Scanner(System.in);
-        Task[] tasks = new Task[MAX_TASKS];
-        int totalTasksCount = 0;
+        ArrayList<Task> tasks = new ArrayList<>();
 
         while (true) {
             String input = scanner.nextLine().trim();
@@ -71,17 +77,22 @@ public class Speed {
                     break;
 
                 } else if (input.equals("list")) {
-                    printList(tasks, totalTasksCount);
+                    printList(tasks);
 
                 } else if (input.equals("mark") || input.startsWith("mark ")) {
-                    int markTaskIndex = parseTaskIndex(input,totalTasksCount);
+                    int markTaskIndex = parseTaskIndex(input,tasks.size());
                     printMarkedTask(tasks, markTaskIndex);
 
                 } else if (input.equals("unmark") || input.startsWith("unmark ")) {
-                    int unmarkTaskIndex = parseTaskIndex(input,totalTasksCount);
+                    int unmarkTaskIndex = parseTaskIndex(input,tasks.size());
                     printUnmarkedTask(tasks, unmarkTaskIndex);
 
-                    //Ensures 'todoo read book' is not allowed, and throws an ERROR_EMPTY_TODO for empty description
+
+                } else if (input.equals("delete") ||  input.startsWith("delete ")) {
+                    int deleteTaskIndex = parseTaskIndex(input,tasks.size());
+                    Task removedTask = tasks.remove(deleteTaskIndex);
+                    printDeletedTask(removedTask, tasks.size());
+
                 } else if (input.equals("todo") || input.startsWith("todo ")) {
                     String[] parts = input.split(" ", 2);
                     String description = parts.length < 2 ? "" : parts[1].trim();
@@ -89,11 +100,12 @@ public class Speed {
                     if (description.isEmpty()) {
                         throw new SpeedException(Ui.ERROR_EMPTY_TODO);
                     }
-                    tasks[totalTasksCount++] = new Todo(description);
-                    printAddedTask(tasks[totalTasksCount - 1], totalTasksCount);
+                    Task newTask = new Todo(description);
+                    tasks.add(newTask);
+                    printAddedTask(newTask, tasks.size());
 
                 } else if (input.equals("deadline") || input.startsWith("deadline ")) {
-                    //remove deadline from input
+                    //remove deadline from input by starting at index 8(deadline length).
                     String deadlineContent = input.substring("deadline".length()).trim();
                     String[] parts = deadlineContent.split(" /by", 2); //split at most by 2 parts
 
@@ -104,8 +116,9 @@ public class Speed {
                     String description = parts[0].trim();
                     String deadline = parts[1].trim();
 
-                    tasks[totalTasksCount++] = new Deadline(description, deadline);
-                    printAddedTask(tasks[totalTasksCount - 1], totalTasksCount);
+                    Task newDeadline = new Deadline(description, deadline);
+                    tasks.add(newDeadline);
+                    printAddedTask(newDeadline, tasks.size());
 
                 } else if (input.equals("event") || input.startsWith("event ")) {
                     String eventContent = input.substring("event".length()).trim();
@@ -120,8 +133,9 @@ public class Speed {
                     String startTime = parts[1].trim();
                     String endTime = parts[2].trim();
 
-                    tasks[totalTasksCount++] = new Event(description, startTime, endTime);
-                    printAddedTask(tasks[totalTasksCount - 1], totalTasksCount);
+                    Task newEvent = new Event(description, startTime, endTime);
+                    tasks.add(newEvent);
+                    printAddedTask(newEvent, tasks.size());
 
                 } else if (input.equals("help")) {
                     Ui.printCommandList();
