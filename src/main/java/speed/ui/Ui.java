@@ -52,15 +52,15 @@ public class Ui {
                         "███████║██║     ███████╗███████╗██████╔╝\n" +
                         "╚══════╝╚═╝     ╚══════╝╚══════╝╚═════╝\n";
         printLine();
-        System.out.println("YO! I'M SPEED 🏃💨");
+        System.out.println("YO! I'M SPEED!");
         System.out.println(logo);
-        System.out.println("WHAT CAN I DO FOR YOU BROOOO?? 💥💥💥");
+        System.out.println("WHAT CAN I DO FOR YOU BROOOO??");
         System.out.println("Type <help> to view the list of available commands.");
         printLine();
     }
 
     private static final String BYE_MESSAGE =
-            "PEACE OUT BROTHER!🫡 GREEN APPLE!!!🍏🍏";
+            "PEACE OUT BROTHER! GREEN APPLE!!!";
 
     public static void printByeMessage() {
         printLine();
@@ -93,6 +93,4 @@ public class Ui {
         System.out.println("Warning: could not load saved tasks. Starting with an empty list.");
         printLine();
     }
-
-
 }
