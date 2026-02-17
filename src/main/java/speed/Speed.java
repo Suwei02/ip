@@ -5,6 +5,8 @@ import speed.task.Event;
 import speed.task.Task;
 import speed.task.Todo;
 import speed.exception.SpeedException;
+import speed.storage.Storage;
+
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -69,6 +71,18 @@ public class Speed {
         Scanner scanner = new Scanner(System.in);
         ArrayList<Task> tasks = new ArrayList<>();
 
+        //Create storage and load
+        Storage storage = new Storage("./data/speed.txt");
+
+        try {
+            tasks = storage.load(); // loads saved tasks (or empty if file missing)
+        } catch (SpeedException e) {
+            Ui.printLine();
+            System.out.println("Warning: could not load saved tasks. Starting with an empty list.");
+            Ui.printLine();
+            tasks = new ArrayList<>();
+        }
+
         while (true) {
             String input = scanner.nextLine().trim();
             try {
@@ -82,16 +96,19 @@ public class Speed {
                 } else if (input.equals("mark") || input.startsWith("mark ")) {
                     int markTaskIndex = parseTaskIndex(input,tasks.size());
                     printMarkedTask(tasks, markTaskIndex);
+                    storage.save(tasks);
 
                 } else if (input.equals("unmark") || input.startsWith("unmark ")) {
                     int unmarkTaskIndex = parseTaskIndex(input,tasks.size());
                     printUnmarkedTask(tasks, unmarkTaskIndex);
+                    storage.save(tasks);
 
 
                 } else if (input.equals("delete") ||  input.startsWith("delete ")) {
                     int deleteTaskIndex = parseTaskIndex(input,tasks.size());
                     Task removedTask = tasks.remove(deleteTaskIndex);
                     printDeletedTask(removedTask, tasks.size());
+                    storage.save(tasks);
 
                 } else if (input.equals("todo") || input.startsWith("todo ")) {
                     String[] parts = input.split(" ", 2);
@@ -103,39 +120,20 @@ public class Speed {
                     Task newTask = new Todo(description);
                     tasks.add(newTask);
                     printAddedTask(newTask, tasks.size());
+                    storage.save(tasks);
 
                 } else if (input.equals("deadline") || input.startsWith("deadline ")) {
                     //remove deadline from input by starting at index 8(deadline length).
-                    String deadlineContent = input.substring("deadline".length()).trim();
-                    String[] parts = deadlineContent.split(" /by", 2); //split at most by 2 parts
-
-                    //check format
-                    if (parts.length < 2) {
-                        throw new SpeedException(Ui.DEADLINE_FORMAT_ERROR);
-                    }
-                    String description = parts[0].trim();
-                    String deadline = parts[1].trim();
-
-                    Task newDeadline = new Deadline(description, deadline);
+                    Task newDeadline = getNewDeadline(input);
                     tasks.add(newDeadline);
                     printAddedTask(newDeadline, tasks.size());
+                    storage.save(tasks);
 
                 } else if (input.equals("event") || input.startsWith("event ")) {
-                    String eventContent = input.substring("event".length()).trim();
-                    String[] parts = eventContent.split(" /from | /to ", 3);
-
-                    // Check format
-                    if (parts.length < 3) {
-                        throw new SpeedException(Ui.EVENT_FORMAT_ERROR);
-                    }
-
-                    String description = parts[0].trim();
-                    String startTime = parts[1].trim();
-                    String endTime = parts[2].trim();
-
-                    Task newEvent = new Event(description, startTime, endTime);
+                    Task newEvent = getNewEvent(input);
                     tasks.add(newEvent);
                     printAddedTask(newEvent, tasks.size());
+                    storage.save(tasks);
 
                 } else if (input.equals("help")) {
                     Ui.printCommandList();
@@ -148,6 +146,39 @@ public class Speed {
             }
         }
     }
+
+    private static Task getNewEvent(String input) throws SpeedException {
+        String eventContent = input.substring("event".length()).trim();
+        String[] parts = eventContent.split(" /from | /to ", 3);
+
+        // Check format
+        if (parts.length < 3) {
+            throw new SpeedException(Ui.EVENT_FORMAT_ERROR);
+        }
+
+        String description = parts[0].trim();
+        String startTime = parts[1].trim();
+        String endTime = parts[2].trim();
+
+        Task newEvent = new Event(description, startTime, endTime);
+        return newEvent;
+    }
+
+    private static Task getNewDeadline(String input) throws SpeedException {
+        String deadlineContent = input.substring("deadline".length()).trim();
+        String[] parts = deadlineContent.split(" /by", 2); //split at most by 2 parts
+
+        //check format
+        if (parts.length < 2) {
+            throw new SpeedException(Ui.DEADLINE_FORMAT_ERROR);
+        }
+        String description = parts[0].trim();
+        String deadline = parts[1].trim();
+
+        Task newDeadline = new Deadline(description, deadline);
+        return newDeadline;
+    }
+
     // Helper
     private static boolean isValidTaskIndex(int idx, int total) {
         return idx >= 0 && idx < total;
