@@ -11,8 +11,13 @@ public class Deadline extends Task {
         this.deadlineTime = deadlineTime;
     }
 
+    public String getDeadlineTime() {
+        return deadlineTime;
+    }
+
     @Override
     public String displayString() {
         return "[D] " + super.displayString() + " (by: " + deadlineTime + ")";
     }
 }
+
