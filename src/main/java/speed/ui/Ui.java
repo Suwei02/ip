@@ -87,4 +87,12 @@ public class Ui {
         System.out.println("8.bye");
         printLine();
     }
+
+    public static void printLoadingWarning() {
+        printLine();
+        System.out.println("Warning: could not load saved tasks. Starting with an empty list.");
+        printLine();
+    }
+
+
 }

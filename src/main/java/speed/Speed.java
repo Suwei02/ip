@@ -77,9 +77,7 @@ public class Speed {
         try {
             tasks = storage.load(); // loads saved tasks (or empty if file missing)
         } catch (SpeedException e) {
-            Ui.printLine();
-            System.out.println("Warning: could not load saved tasks. Starting with an empty list.");
-            Ui.printLine();
+            Ui.printLoadingWarning();
             tasks = new ArrayList<>();
         }
 
