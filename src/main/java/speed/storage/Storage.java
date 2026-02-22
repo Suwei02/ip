@@ -14,17 +14,32 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-
+/**
+ * Manages saving tasks to disk and loading tasks from disk.
+ */
 public class Storage {
     public static final String EVENT = "E";
     public static final String DEADLINE = "D";
     public static final String TODO = "T";
     private final String filePath;
 
+    /**
+     * Creates a Storage object that reads from and writes to the given file path.
+     *
+     * @param filePath File path of the save file.
+     */
     public Storage(String filePath) {
         this.filePath = filePath; //object filePath now refers to relativePath
     }
 
+    /**
+     * Loads tasks from the save file.
+     * If the file does not exist, an empty list is returned.
+     * If some lines are corrupted, valid tasks are still loaded and a warning is shown.
+     *
+     * @return List of tasks loaded from disk.
+     * @throws SpeedException If the save file exists but cannot be opened.
+     */
     public ArrayList<Task> load() throws SpeedException {
 
         ArrayList<Task> tasks = new ArrayList<>();
@@ -61,6 +76,13 @@ public class Storage {
         return tasks;
     }
 
+    /**
+     * Saves the given list of tasks to the save file.
+     * Any required parent directories will be created if missing.
+     *
+     * @param tasks List of tasks to save.
+     * @throws SpeedException If an I/O error occurs while writing the file.
+     */
     public void save(ArrayList<Task> tasks) throws SpeedException {
 
         try {
@@ -89,6 +111,13 @@ public class Storage {
 
     }
 
+    /**
+     * Converts a Task into a single-line string for storage.
+     *
+     * @param task Task to serialize.
+     * @return Serialized representation of the task.
+     */
+
     private String serialize(Task task) {
 
         String done = task.isDone() ? "1" : "0";
@@ -108,6 +137,13 @@ public class Storage {
         return "";
     }
 
+    /**
+     * Parses a saved line into a Task object.
+     *
+     * @param line A line from the save file.
+     * @return Task represented by the line.
+     * @throws SpeedException If the line format is invalid or unsupported.
+     */
     private Task parseLine(String line) throws SpeedException {
         //Split by |, ignore all whitespaces and treat | as a literal character
         String[] parts = line.split("\\s*\\|\\s*");
