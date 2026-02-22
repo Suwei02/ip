@@ -16,6 +16,9 @@ import java.util.Scanner;
 
 
 public class Storage {
+    public static final String EVENT = "E";
+    public static final String DEADLINE = "D";
+    public static final String TODO = "T";
     private final String filePath;
 
     public Storage(String filePath) {
@@ -121,21 +124,21 @@ public class Storage {
 
         switch (type) {
 
-        case "T":
+        case TODO:
             if (parts.length != 3) {
                 throw new SpeedException("Corrupted Todo line");
             }
             task = new Todo(description);
             break;
 
-        case "D":
+        case DEADLINE:
             if (parts.length != 4) {
                 throw new SpeedException("Corrupted Deadline line");
             }
             task = new Deadline(description, parts[3]);
             break;
 
-        case "E":
+        case EVENT:
             if (parts.length != 5) {
                 throw new SpeedException("Corrupted Event line");
             }

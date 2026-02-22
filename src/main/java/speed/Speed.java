@@ -71,7 +71,7 @@ public class Speed {
         Scanner scanner = new Scanner(System.in);
         ArrayList<Task> tasks = new ArrayList<>();
 
-        //Create storage and load
+        //Create storage, use relative path
         Storage storage = new Storage("./data/speed.txt");
 
         try {
