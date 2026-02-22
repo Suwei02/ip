@@ -5,6 +5,7 @@ import speed.task.Task;
 import speed.task.Todo;
 import speed.task.Deadline;
 import speed.task.Event;
+import speed.ui.Ui;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -25,6 +26,7 @@ public class Storage {
 
         ArrayList<Task> tasks = new ArrayList<>();
         File file = new File(filePath);
+        boolean hasCorruption = false;
 
         if (!file.exists()) {
             return tasks;
@@ -41,8 +43,13 @@ public class Storage {
                     tasks.add(task);
 
                 } catch (SpeedException e)  {
-                    // Skip corrupted line and continue loading
+                    hasCorruption = true;
                 }
+            }
+            if (hasCorruption) {
+                Ui.printLine();
+                System.out.println("Warning: Some tasks could not be loaded.");
+                Ui.printLine();
             }
             scanner.close();
         } catch (FileNotFoundException e) {
