@@ -1,9 +1,13 @@
 package speed.ui;
 
-/**
- *Contains methods displaying user interaction texts.
- */
+import speed.task.Task;
+import speed.task.TaskList;
 
+import java.util.Scanner;
+
+/**
+ * Handles all user interactions including input and output.
+ */
 public class Ui {
 
     public static final String ERROR_UNKNOWN_COMMAND =
@@ -33,17 +37,38 @@ public class Ui {
     public static final String INVALID_TASK_NUMBER =
             "Invalid task number man. Type <list> to find the correct task number!";
 
-    public static void noTasksMessage() {
-        printLine();
-        System.out.println("NO TASKS YET! SIUUU!");
-        printLine();
+    private static final String BYE_MESSAGE =
+            "PEACE OUT BROTHER! GREEN APPLE!!!";
+
+    private final Scanner scanner;
+
+    /**
+     * Creates an Ui instance with a Scanner for reading user input.
+     */
+    public Ui() {
+        this.scanner = new Scanner(System.in);
     }
 
+    /**
+     * Reads a command from the user.
+     *
+     * @return The user's input as a trimmed string.
+     */
+    public String readCommand() {
+        return scanner.nextLine().trim();
+    }
+
+    /**
+     * Displays a horizontal line separator.
+     */
     public static void printLine() {
         System.out.println("____________________________________________________________");
     }
 
-    public static void greet() {
+    /**
+     * Displays the welcome message and logo.
+     */
+    public void greet() {
         String logo =
                 "███████╗██████╗ ███████╗███████╗██████╗\n" +
                         "██╔════╝██╔══██╗██╔════╝██╔════╝██╔══██╗\n" +
@@ -59,22 +84,30 @@ public class Ui {
         printLine();
     }
 
-    private static final String BYE_MESSAGE =
-            "PEACE OUT BROTHER! GREEN APPLE!!!";
-
-    public static void printByeMessage() {
+    /**
+     * Displays the goodbye message.
+     */
+    public void printByeMessage() {
         printLine();
         System.out.println(BYE_MESSAGE);
         printLine();
     }
 
-    public static void showError(String message) {
+    /**
+     * Displays an error message.
+     *
+     * @param message The error message to display.
+     */
+    public void showError(String message) {
         printLine();
         System.out.println(message);
         printLine();
     }
 
-    public static void printCommandList() {
+    /**
+     * Displays the list of available commands.
+     */
+    public void printCommandList() {
         printLine();
         System.out.println("Available commands:");
         System.out.println("1.list");
@@ -88,9 +121,85 @@ public class Ui {
         printLine();
     }
 
-    public static void printLoadingWarning() {
+    /**
+     * Displays a warning when tasks cannot be loaded.
+     */
+    public void printLoadingWarning() {
         printLine();
         System.out.println("Warning: could not load saved tasks. Starting with an empty list.");
+        printLine();
+    }
+
+    /**
+     * Displays the list of tasks.
+     *
+     * @param tasks The TaskList to display.
+     */
+    public void showTaskList(TaskList tasks) {
+        if (tasks.isEmpty()) {
+            printLine();
+            System.out.println("NO TASKS YET! SIUUU!");
+            printLine();
+        } else {
+            printLine();
+            System.out.println("Here are the tasks in your list bro:  ");
+            int taskCount = 1;
+            for (Task task : tasks.getTasks()) {
+                System.out.println((taskCount++) + "." + task.displayString());
+            }
+            printLine();
+        }
+    }
+
+    /**
+     * Displays a message when a task is added.
+     *
+     * @param task The task that was added.
+     * @param totalTaskCount The total number of tasks after adding.
+     */
+    public void showTaskAdded(Task task, int totalTaskCount) {
+        printLine();
+        System.out.println("Gotcha, I've added this task:");
+        System.out.println(task.displayString());
+        System.out.println("Now you have " + totalTaskCount + " tasks in the list.");
+        printLine();
+    }
+
+    /**
+     * Displays a message when a task is marked as done.
+     *
+     * @param task The task that was marked.
+     */
+    public void showTaskMarked(Task task) {
+        printLine();
+        System.out.println("HELL YEAH! ANOTHER TASK DONE:");
+        System.out.println(task.displayString());
+        printLine();
+    }
+
+    /**
+     * Displays a message when a task is unmarked.
+     *
+     * @param task The task that was unmarked.
+     */
+    public void showTaskUnmarked(Task task) {
+        printLine();
+        System.out.println("Ok, still waiting on this one bro:");
+        System.out.println(task.displayString());
+        printLine();
+    }
+
+    /**
+     * Displays a message when a task is deleted.
+     *
+     * @param task The task that was deleted.
+     * @param remainingTasksCount The number of tasks remaining.
+     */
+    public void showTaskDeleted(Task task, int remainingTasksCount) {
+        printLine();
+        System.out.println("Gotchu bro! Deleting this task:");
+        System.out.println(task.displayString());
+        System.out.println("Now you have " + remainingTasksCount + " tasks in the list.");
         printLine();
     }
 }
