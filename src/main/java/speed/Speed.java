@@ -1,12 +1,10 @@
 package speed;
 
-import speed.task.Deadline;
-import speed.task.Event;
 import speed.task.Task;
-import speed.task.Todo;
 import speed.task.TaskList;
 import speed.exception.SpeedException;
 import speed.storage.Storage;
+import speed.parser.Parser;
 
 import java.util.Scanner;
 
@@ -90,43 +88,36 @@ public class Speed {
                     printList(tasks);
 
                 } else if (input.equals("mark") || input.startsWith("mark ")) {
-                    int markTaskIndex = parseTaskIndex(input,tasks.size());
+                    int markTaskIndex = Parser.parseTaskIndex(input, tasks.size());
                     printMarkedTask(tasks, markTaskIndex);
                     storage.save(tasks.getTasks());
 
                 } else if (input.equals("unmark") || input.startsWith("unmark ")) {
-                    int unmarkTaskIndex = parseTaskIndex(input,tasks.size());
+                    int unmarkTaskIndex = Parser.parseTaskIndex(input, tasks.size());
                     printUnmarkedTask(tasks, unmarkTaskIndex);
                     storage.save(tasks.getTasks());
 
 
                 } else if (input.equals("delete") ||  input.startsWith("delete ")) {
-                    int deleteTaskIndex = parseTaskIndex(input,tasks.size());
+                    int deleteTaskIndex = Parser.parseTaskIndex(input, tasks.size());
                     Task removedTask = tasks.deleteTask(deleteTaskIndex);
                     printDeletedTask(removedTask, tasks.size());
                     storage.save(tasks.getTasks());
 
                 } else if (input.equals("todo") || input.startsWith("todo ")) {
-                    String[] parts = input.split(" ", 2);
-                    String description = parts.length < 2 ? "" : parts[1].trim();
-
-                    if (description.isEmpty()) {
-                        throw new SpeedException(Ui.ERROR_EMPTY_TODO);
-                    }
-                    Task newTask = new Todo(description);
+                    Task newTask = Parser.parseTodo(input);
                     tasks.addTask(newTask);
                     printAddedTask(newTask, tasks.size());
                     storage.save(tasks.getTasks());
 
                 } else if (input.equals("deadline") || input.startsWith("deadline ")) {
-                    //remove deadline from input by starting at index 8(deadline length).
-                    Task newDeadline = getNewDeadline(input);
+                    Task newDeadline = Parser.parseDeadline(input);
                     tasks.addTask(newDeadline);
                     printAddedTask(newDeadline, tasks.size());
                     storage.save(tasks.getTasks());
 
                 } else if (input.equals("event") || input.startsWith("event ")) {
-                    Task newEvent = getNewEvent(input);
+                    Task newEvent = Parser.parseEvent(input);
                     tasks.addTask(newEvent);
                     printAddedTask(newEvent, tasks.size());
                     storage.save(tasks.getTasks());
@@ -143,59 +134,5 @@ public class Speed {
         }
     }
 
-    private static Task getNewEvent(String input) throws SpeedException {
-        String eventContent = input.substring("event".length()).trim();
-        String[] parts = eventContent.split(" /from | /to ", 3);
-
-        // Check format
-        if (parts.length < 3) {
-            throw new SpeedException(Ui.EVENT_FORMAT_ERROR);
-        }
-
-        String description = parts[0].trim();
-        String startTime = parts[1].trim();
-        String endTime = parts[2].trim();
-
-        Task newEvent = new Event(description, startTime, endTime);
-        return newEvent;
-    }
-
-    private static Task getNewDeadline(String input) throws SpeedException {
-        String deadlineContent = input.substring("deadline".length()).trim();
-        String[] parts = deadlineContent.split(" /by", 2); //split at most by 2 parts
-
-        //check format
-        if (parts.length < 2) {
-            throw new SpeedException(Ui.DEADLINE_FORMAT_ERROR);
-        }
-        String description = parts[0].trim();
-        String deadline = parts[1].trim();
-
-        Task newDeadline = new Deadline(description, deadline);
-        return newDeadline;
-    }
-
-    // Helper
-    private static boolean isValidTaskIndex(int idx, int total) {
-        return idx >= 0 && idx < total;
-    }
-
-    //Helper to check validity of index
-    private static int parseTaskIndex(String input, int totalTaskCount) throws SpeedException {
-        String[] parts = input.trim().split("\\s+"); //splits string by one or more spaces
-        if (parts.length < 2) {
-            throw new SpeedException(Ui.ERROR_NO_TASK_NUMBER);
-        }
-        int index;
-        try {
-            index = Integer.parseInt(parts[1]) - 1;
-        } catch (NumberFormatException e) {
-            throw new SpeedException(Ui.ERROR_NOT_NUMBER);
-        }
-        if (!isValidTaskIndex(index, totalTaskCount)) {
-            throw new SpeedException(Ui.INVALID_TASK_NUMBER);
-        }
-        return index;
-    }
 }
 
