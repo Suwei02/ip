@@ -3,6 +3,7 @@ package speed.ui;
 import speed.task.Task;
 import speed.task.TaskList;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -15,6 +16,9 @@ public class Ui {
 
     public static final String ERROR_EMPTY_TODO =
             "Hold up! You forgot to give a description of the todo!!";
+
+    public static final String ERROR_MISSING_KEYWORD =
+            "Give me a keyword of what you want me to find bro!";
 
     public static final String ERROR_NO_TASK_NUMBER =
             "Please give me the task number as well bro.";
@@ -117,7 +121,8 @@ public class Ui {
         System.out.println("5.mark <Task number>");
         System.out.println("6.unmark <Task number>");
         System.out.println("7.delete <Task number>");
-        System.out.println("8.bye");
+        System.out.println("8.find <keyword>");
+        System.out.println("9.bye");
         printLine();
     }
 
@@ -201,5 +206,22 @@ public class Ui {
         System.out.println(task.displayString());
         System.out.println("Now you have " + remainingTasksCount + " tasks in the list.");
         printLine();
+    }
+
+    public void showFindList(ArrayList<Task> matchedTasks) {
+        if (matchedTasks.isEmpty()) {
+            printLine();
+            System.out.println("No matches found!");
+            printLine();
+        } else {
+            printLine();
+            System.out.println("Here are the matching tasks in your list:");
+            int taskCount = 1;
+            for (Task task : matchedTasks) {
+                System.out.println((taskCount++) + "." + task.displayString());
+            }
+            printLine();
+        }
+
     }
 }
