@@ -2,6 +2,8 @@ package speed.task;
 
 import java.util.ArrayList;
 
+import static java.util.stream.Collectors.toList;
+
 /**
  * Represents a list of tasks with operations to manage them.
  */
@@ -97,5 +99,16 @@ public class TaskList {
      */
     public ArrayList<Task> getTasks() {
         return tasks;
+    }
+
+    public ArrayList<Task> find (String keyword) {
+        String key = keyword.toLowerCase();
+
+        ArrayList<Task> matchedTasks = (ArrayList<Task>) tasks.stream()
+                        .filter(t -> t.getDescription()
+                                .toLowerCase()
+                                .contains(key))
+                        .collect(toList());
+        return matchedTasks;
     }
 }
