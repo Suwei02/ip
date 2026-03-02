@@ -1,16 +1,72 @@
 package speed.parser;
 
+import speed.command.Command;
+import speed.command.DeadlineCommand;
+import speed.command.DeleteCommand;
+import speed.command.EventCommand;
+import speed.command.ExitCommand;
+import speed.command.HelpCommand;
+import speed.command.ListCommand;
+import speed.command.MarkCommand;
+import speed.command.TodoCommand;
+import speed.command.UnmarkCommand;
 import speed.exception.SpeedException;
 import speed.task.Deadline;
 import speed.task.Event;
-import speed.task.Task;
 import speed.task.Todo;
 import speed.ui.Ui;
 
 /**
- * Parses user input and creates appropriate Task objects.
+ * Parses user input and creates appropriate Command objects.
  */
 public class Parser {
+
+    /**
+     * Parses user input and returns the corresponding Command object.
+     *
+     * @param input The full user input string.
+     * @param totalTaskCount Total number of tasks (needed for index validation).
+     * @return The Command object to execute.
+     * @throws SpeedException If the input is invalid or cannot be parsed.
+     */
+    public static Command parseCommand(String input, int totalTaskCount) throws SpeedException {
+        if (input.equals("bye")) {
+            return new ExitCommand();
+
+        } else if (input.equals("list")) {
+            return new ListCommand();
+
+        } else if (input.equals("help")) {
+            return new HelpCommand();
+
+        } else if (input.equals("mark") || input.startsWith("mark ")) {
+            int index = parseTaskIndex(input, totalTaskCount);
+            return new MarkCommand(index);
+
+        } else if (input.equals("unmark") || input.startsWith("unmark ")) {
+            int index = parseTaskIndex(input, totalTaskCount);
+            return new UnmarkCommand(index);
+
+        } else if (input.equals("delete") || input.startsWith("delete ")) {
+            int index = parseTaskIndex(input, totalTaskCount);
+            return new DeleteCommand(index);
+
+        } else if (input.equals("todo") || input.startsWith("todo ")) {
+            Todo task = parseTodo(input);
+            return new TodoCommand(task);
+
+        } else if (input.equals("deadline") || input.startsWith("deadline ")) {
+            Deadline task = parseDeadline(input);
+            return new DeadlineCommand(task);
+
+        } else if (input.equals("event") || input.startsWith("event ")) {
+            Event task = parseEvent(input);
+            return new EventCommand(task);
+
+        } else {
+            throw new SpeedException(Ui.ERROR_UNKNOWN_COMMAND);
+        }
+    }
 
     /**
      * Helper method to check if a task index is valid.
@@ -31,7 +87,7 @@ public class Parser {
      * @return Zero-based index of the task.
      * @throws SpeedException If the index is missing, invalid, or out of range.
      */
-    public static int parseTaskIndex(String input, int totalTaskCount) throws SpeedException {
+    private static int parseTaskIndex(String input, int totalTaskCount) throws SpeedException {
         String[] parts = input.trim().split("\\s+"); // splits string by one or more spaces
         if (parts.length < 2) {
             throw new SpeedException(Ui.ERROR_NO_TASK_NUMBER);
@@ -55,7 +111,7 @@ public class Parser {
      * @return A new Deadline task.
      * @throws SpeedException If the format is invalid.
      */
-    public static Task parseDeadline(String input) throws SpeedException {
+    private static Deadline parseDeadline(String input) throws SpeedException {
         String deadlineContent = input.substring("deadline".length()).trim();
         String[] parts = deadlineContent.split(" /by ", 2); // split at most by 2 parts
 
@@ -76,7 +132,7 @@ public class Parser {
      * @return A new Event task.
      * @throws SpeedException If the format is invalid.
      */
-    public static Task parseEvent(String input) throws SpeedException {
+    private static Event parseEvent(String input) throws SpeedException {
         String eventContent = input.substring("event".length()).trim();
         String[] parts = eventContent.split(" /from | /to ", 3);
 
@@ -99,7 +155,7 @@ public class Parser {
      * @return A new Todo task.
      * @throws SpeedException If the description is empty.
      */
-    public static Task parseTodo(String input) throws SpeedException {
+    private static Todo parseTodo(String input) throws SpeedException {
         String[] parts = input.split(" ", 2);
         String description = parts.length < 2 ? "" : parts[1].trim();
 

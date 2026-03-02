@@ -1,10 +1,10 @@
 package speed;
 
-import speed.task.Task;
-import speed.task.TaskList;
+import speed.command.Command;
 import speed.exception.SpeedException;
-import speed.storage.Storage;
 import speed.parser.Parser;
+import speed.storage.Storage;
+import speed.task.TaskList;
 import speed.ui.Ui;
 
 /**
@@ -36,59 +36,14 @@ public class Speed {
      */
     public void run() {
         ui.greet();
+        boolean isExit = false;
 
-        while (true) {
-            String input = ui.readCommand();
+        while (!isExit) {
             try {
-                if (input.equals("bye")) {
-                    ui.printByeMessage();
-                    break;
-
-                } else if (input.equals("list")) {
-                    ui.showTaskList(tasks);
-
-                } else if (input.equals("mark") || input.startsWith("mark ")) {
-                    int markTaskIndex = Parser.parseTaskIndex(input, tasks.size());
-                    tasks.markTask(markTaskIndex);
-                    ui.showTaskMarked(tasks.getTask(markTaskIndex));
-                    storage.save(tasks.getTasks());
-
-                } else if (input.equals("unmark") || input.startsWith("unmark ")) {
-                    int unmarkTaskIndex = Parser.parseTaskIndex(input, tasks.size());
-                    tasks.unmarkTask(unmarkTaskIndex);
-                    ui.showTaskUnmarked(tasks.getTask(unmarkTaskIndex));
-                    storage.save(tasks.getTasks());
-
-                } else if (input.equals("delete") || input.startsWith("delete ")) {
-                    int deleteTaskIndex = Parser.parseTaskIndex(input, tasks.size());
-                    Task removedTask = tasks.deleteTask(deleteTaskIndex);
-                    ui.showTaskDeleted(removedTask, tasks.size());
-                    storage.save(tasks.getTasks());
-
-                } else if (input.equals("todo") || input.startsWith("todo ")) {
-                    Task newTask = Parser.parseTodo(input);
-                    tasks.addTask(newTask);
-                    ui.showTaskAdded(newTask, tasks.size());
-                    storage.save(tasks.getTasks());
-
-                } else if (input.equals("deadline") || input.startsWith("deadline ")) {
-                    Task newDeadline = Parser.parseDeadline(input);
-                    tasks.addTask(newDeadline);
-                    ui.showTaskAdded(newDeadline, tasks.size());
-                    storage.save(tasks.getTasks());
-
-                } else if (input.equals("event") || input.startsWith("event ")) {
-                    Task newEvent = Parser.parseEvent(input);
-                    tasks.addTask(newEvent);
-                    ui.showTaskAdded(newEvent, tasks.size());
-                    storage.save(tasks.getTasks());
-
-                } else if (input.equals("help")) {
-                    ui.printCommandList();
-
-                } else {
-                    throw new SpeedException(Ui.ERROR_UNKNOWN_COMMAND);
-                }
+                String input = ui.readCommand();
+                Command command = Parser.parseCommand(input, tasks.size());
+                command.execute(tasks, ui, storage);
+                isExit = command.isExit();
             } catch (SpeedException e) {
                 ui.showError(e.getMessage());
             }
