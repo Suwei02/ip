@@ -5,6 +5,7 @@ import speed.command.DeadlineCommand;
 import speed.command.DeleteCommand;
 import speed.command.EventCommand;
 import speed.command.ExitCommand;
+import speed.command.FindCommand;
 import speed.command.HelpCommand;
 import speed.command.ListCommand;
 import speed.command.MarkCommand;
@@ -63,6 +64,9 @@ public class Parser {
             Event task = parseEvent(input);
             return new EventCommand(task);
 
+        } else if (input.equals("find") || input.startsWith("find ") ) {
+            String keyword = parseFind(input);
+            return new FindCommand(keyword);
         } else {
             throw new SpeedException(Ui.ERROR_UNKNOWN_COMMAND);
         }
@@ -163,5 +167,15 @@ public class Parser {
             throw new SpeedException(Ui.ERROR_EMPTY_TODO);
         }
         return new Todo(description);
+    }
+
+    private static String parseFind(String input) throws SpeedException {
+        String[] parts = input.split(" ", 2);
+        String keyword = parts.length < 2 ? "" : parts[1].trim();
+
+        if (keyword.isEmpty()) {
+            throw new SpeedException(Ui.ERROR_MISSING_KEYWORD);
+        }
+        return keyword;
     }
 }
